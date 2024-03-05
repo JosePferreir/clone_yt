@@ -1,12 +1,15 @@
+import 'dart:ffi';
+
 import 'package:clone_yt/model/Video.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const CHAVE_YT_API = 'AIzaSyAW9ZhWNwm7F3IKBi5OxwRQLdXfgFZm0Y4';
+const CHAVE_YT_API = 'AIzaSyCVdtIUkATbohNYfVp5z-d-EZW36MqQ06A';
 const URL_BASE = 'https://www.googleapis.com/youtube/v3/';
 
 class Api{
-  pesquisar(String pesquisa) async {
+  Future<List<Video>> pesquisar(String pesquisa) async {
+    print("ta passando duas vezes");
     http.Response response = await http.get(
       Uri.parse(
         URL_BASE + 'search'
@@ -26,9 +29,11 @@ class Api{
           return Video.fromJson(map);
         }
       ).toList();
-      return dadosJson;
+      return videos;
+      print(videos.length.toString());
     } else {
       print('Erro ao pesquisar dados');
+      return [];
     }
   }
 }

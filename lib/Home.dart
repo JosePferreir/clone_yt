@@ -1,3 +1,4 @@
+import 'package:clone_yt/CustomSearchDelegate.dart';
 import 'package:clone_yt/telas/Biblioteca.dart';
 import 'package:clone_yt/telas/EmAlta.dart';
 import 'package:clone_yt/telas/Inicio.dart';
@@ -13,16 +14,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  List<Widget> telas = [
-    Inicio(),
-    EmAlta(),
-    Inscricoes(),
-    Biblioteca(),
-  ];
 
+  String _resultado = "";
   int _indiceAtual = 0;
+
+
   @override
   Widget build(BuildContext context) {
+
+    List<Widget>telas = [
+      Inicio(_resultado),
+      EmAlta(),
+      Inscricoes(),
+      Biblioteca(),
+    ];
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
@@ -39,23 +45,24 @@ class _HomeState extends State<Home> {
             title: Image.asset("images/youtube.png", width: 98, height: 22,),
             actions: <Widget>[
               IconButton(
-                icon: const Icon(Icons.videocam),
-                onPressed: () {},
-              ),
-              IconButton(
                 icon: const Icon(Icons.search),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.account_circle),
-                onPressed: () {},
+                onPressed: () async {
+                  String? res = await showSearch(context: context, delegate: CustomSearchDelegate(busca: _resultado));
+                  setState(() {
+                    _resultado = res.toString();
+                    print("resultado: " +_resultado);
+                  });
+                },
               ),
             ],
             elevation: 0, // Remova a sombra padrão do AppBar
           ),
         ),
       ),
-      body: telas[_indiceAtual],
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: telas[_indiceAtual],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceAtual,
         onTap: (index) {
